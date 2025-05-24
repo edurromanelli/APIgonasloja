@@ -1,4 +1,4 @@
- // Product Class
+   // Product Class
         class Product {
             constructor(id, title, price, description, image, rating = { rate: 0, count: 0 }) {
                 this.id = id;
@@ -262,7 +262,9 @@
                 }, 3000);
             }
         }
- document.addEventListener('DOMContentLoaded', () => {
+
+        // Main App
+        document.addEventListener('DOMContentLoaded', () => {
             const productsGrid = document.getElementById('products-grid');
             const loadingElement = document.getElementById('loading');
             const cart = new Cart();
