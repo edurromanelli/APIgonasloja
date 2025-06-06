@@ -402,11 +402,6 @@
                 fetchProducts('https://fakestoreapi.com/products');
             });
             
-            // Fetch products from local PHP API
-            document.getElementById('fetch-local').addEventListener('click', () => {
-                fetchProducts('http://localhost/backend/api.php/api/produtos');
-            });
-            
             // Initial load - fetch from FakeStore
             fetchProducts('https://fakestoreapi.com/products');
             
