@@ -38,6 +38,36 @@ if ($metodo === 'GET' && preg_match('#^/api/produtos/(\d+)$#', $caminho, $matche
 
     enviarRespostaJson($novoProduto, 201);
 
+    } elseif ($metodo === 'PUT' && preg_match('#^/api/produtos/(\d+)$#', $caminho, $matches)) {
+    $id = intval($matches[1]);
+    $produtoExistente = buscarProdutoPorId($id, $produtos);
+
+    if (!$produtoExistente) {
+        enviarRespostaJson(['erro' => 'Produto não encontrado.'], 404);
+    }
+
+    $dadosRecebidos = json_decode(file_get_contents('php://input'), true);
+    $erros = validarDadosProduto($dadosRecebidos);
+
+    if (!empty($erros)) {
+        enviarRespostaJson(['erros' => $erros], 400);
+    }
+
+    $produtoAtualizado = atualizarProduto($produtos, $id, $dadosRecebidos);
+    enviarRespostaJson($produtoAtualizado, 200);
+
+} elseif ($metodo === 'DELETE' && preg_match('#^/api/produtos/(\d+)$#', $caminho, $matches)) {
+    $id = intval($matches[1]);
+    $produtoExistente = buscarProdutoPorId($id, $produtos);
+
+    if (!$produtoExistente) {
+        enviarRespostaJson(['erro' => 'Produto não encontrado.'], 404);
+    }
+
+    excluirProduto($produtos, $id);
+    enviarRespostaJson(['mensagem' => 'Produto excluído com sucesso.'], 200);
+
+
 } else {
     enviarRespostaJson(['erro' => 'Rota ou método não suportado.'], 404);
 }

@@ -21,11 +21,17 @@ function validarDadosProduto($dados) {
     $erros = [];
 
     if (!isset($dados['nome']) || trim($dados['nome']) === '') {
-        $erros['nome'] = 'Nome é obrigatório.';
+        $erros['nome'] = 'O nome é obrigatório.';
+    } elseif (strlen($dados['nome']) > 100) {
+        $erros['nome'] = 'O nome não pode exceder 100 caracteres.';
     }
 
-    if (!isset($dados['preco']) || !is_numeric($dados['preco']) || $dados['preco'] <= 0) {
-        $erros['preco'] = 'Preço deve ser um número maior que zero.';
+    if (!isset($dados['preco'])) {
+        $erros['preco'] = 'O preço é obrigatório.';
+    } elseif (!is_numeric($dados['preco'])) {
+        $erros['preco'] = 'O preço deve ser numérico.';
+    } elseif ($dados['preco'] <= 0) {
+        $erros['preco'] = 'O preço deve ser maior que zero.';
     }
 
     return $erros;
@@ -36,4 +42,25 @@ function enviarRespostaJson($dados, $codigo = 200) {
     header('Content-Type: application/json');
     echo json_encode($dados);
     exit;
+}
+
+function atualizarProduto(&$produtos, $id, $dadosAtualizados) {
+    foreach ($produtos as &$produto) {
+        if ($produto['id'] == $id) {
+            $produto['nome'] = $dadosAtualizados['nome'];
+            $produto['preco'] = floatval($dadosAtualizados['preco']);
+            return $produto;
+        }
+    }
+    return null;
+}
+
+function excluirProduto(&$produtos, $id) {
+    foreach ($produtos as $index => $produto) {
+        if ($produto['id'] == $id) {
+            array_splice($produtos, $index, 1);
+            return true;
+        }
+    }
+    return false;
 }
